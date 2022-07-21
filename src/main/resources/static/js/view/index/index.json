@@ -1,0 +1,38 @@
+{
+    "common": {
+        "css": {
+            "disable_view": "fas fa-3x fa-times",
+            "in_progress": "fas fa-3x fa-sync-alt fa-spin",
+            "round_number_color": "color{}"
+        },
+        "selector": {
+            "last_round_number": "button[data-index={}]"
+        }
+    },
+    "round": {
+        "selector": {
+            "last_round_draw_date": ".last-round-draw-date",
+            "last_round_numbers": ".last-round-numbers",
+            "last_round_progress": ".last-round-loading"
+        },
+        "value": {
+            "last_round_title": "{} {} ({})"
+        }
+    },
+    "setting": {
+        "selector": {
+            "exec_scrap_batch": "#setting-exec-batch"
+        }
+    },
+    "prediction": {
+        "selector": {
+            "chart": "#all-number-appear-chart",
+            "chart_progress": "body > div > div > div.content > div > div:nth-child(2) > div > div > div.overlay",
+            "last_prediction_numbers": ".last_prediction_{}",
+            "last_prediction_progress": "body > div > div > div.content > div > div:nth-child(1) > div:nth-child(2) > div > div.overlay"
+        },
+        "value": {
+            "chart_color": "#007bff"
+        }
+    }
+}

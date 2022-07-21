@@ -1,0 +1,70 @@
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /${CONTEXT_PATH:${spring.application.name}}
+
+spring:
+  # application
+  application:
+    name: lotto
+
+  # database
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:~/lotto}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:}
+    hikari:
+      auto-commit: false
+      maximum-pool-size: ${DATASOURCE_MAX_POOL_SIZE:10}
+    dbcp2:
+      validation-query: SELECT 1
+
+  # jpa
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    database-platform: org.hibernate.dialect.${DATABASE_PLATFORM:H2Dialect}
+
+# logging
+logging:
+  pattern:
+    console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+  level:
+    root: ${LOGGING_ROOT_LEVEL:warn}
+    dev.kirin.toy.lottoweb: ${LOGGING_APP_LEVEL:info}
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    enabled-by-default: true
+
+# swagger configurations
+springdoc:
+  swagger-ui:
+    path: /docs/api/ui
+    enabled: ${ENABLE_API_DOCS:true}
+  api-docs:
+    path: /docs/api
+    groups:
+      enabled: true
+    enabled: ${ENABLE_API_DOCS:true}
+  default-produces-media-type: applicatino/json
+  group-configs:
+    - group: default
+      paths-to-match: /api/v1/**
+    - group: Batch API
+      paths-to-match: /api/v1/batch/**
+    - group: 담첨 번호 API
+      paths-to-match: /api/v1/round/**
+    - group: 예측 API
+      paths-to-match: /api/v1/prediction/**
+    - group: Application History API
+      paths-to-match: /api/v1/history/**
+  show-actuator: true
+  writer-with-default-pretty-printer: true

@@ -1,0 +1,9 @@
+spring:
+  # database
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:mem:account}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 10

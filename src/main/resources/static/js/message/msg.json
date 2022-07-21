@@ -1,0 +1,16 @@
+{
+  "round": {
+    "last_round_title": "마지막 추첨 : {} ({} 회)",
+    "empty_last_round": "마지막 추첨 정보가 없습니다.",
+    "error_get_last_round": "마지막 추첨 정보를 가져올 수 없습니다."
+  },
+  "prediction": {
+    "error_get_last_predictions": "다음 예상 번호를 가져올 수 없습니다.",
+    "error_get_predictions": "번호별 출현율 정보를 가져올 수 없습니다."
+  },
+  "setting": {
+    "start_scrap": "스크랩을 시작합니다.",
+    "success_scrap": "스크랩을 완료했습니다.",
+    "error_scrap": "스크랩을 실패 했습니다."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "baseUri": "api",
+  "methods": ["post", "get", "put", "patch", "delete"],
+  "api": {
+    "batch": {
+      "execScrap": "/batch/SCRAP/exec"
+    },
+    "round": {
+      "getLastRound": "/round/last"
+    },
+    "prediction": {
+      "getAllPredictions": "/prediction",
+      "getLastPredictions": "/prediction/{}/result"
+    }
+  }
+}

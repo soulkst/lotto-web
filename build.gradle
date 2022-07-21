@@ -1,0 +1,150 @@
+import java.nio.file.Paths
+
+plugins {
+    id 'org.springframework.boot' version '2.6.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'com.google.cloud.tools.jib' version '3.1.4'
+    id "com.github.node-gradle.node" version "3.1.0"
+    id 'maven-publish'
+}
+
+group = 'dev.kirin.toy'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+//    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+
+
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+
+
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testImplementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+
+    // dev tools
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.10'
+
+    // scrap
+    implementation 'org.jsoup:jsoup:1.14.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task grunt_build(type: NpxTask) {
+    dependsOn npmInstall
+    command = "grunt"
+}
+
+bootJar {
+    mainClass = "dev.kirin.toy.lottoweb.LottoWebApplication"
+}
+
+jar {
+    if(project.getProperties().containsKey("release")) {
+        processResources {
+            dependsOn("grunt_build")
+            exclude("static")
+            from("${project.projectDir}/dist") {
+                into "static"
+            }
+        }
+    }
+}
+
+Map<String, String> ENV_MAP = System.getenv()
+
+def targetFileName =  project.jar.archiveFileName.get().replaceAll("-plian", "")
+def targetFile = Paths.get(project.jar.destinationDirectory.get().toString(), targetFileName)
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = rootProject.name
+            version = version
+            artifact(targetFile) {
+                extension "jar"
+            }
+        }
+    }
+    repositories {
+        maven {
+            name 'nexus'
+            allowInsecureProtocol = true
+            url ENV_MAP.getOrDefault("NEXUS_URL", "NEXUS_URL")
+            credentials {
+                username ENV_MAP.getOrDefault("NEXUS_USERNAME", "NEXUS_USERNAME")
+                password ENV_MAP.getOrDefault("NEXUS_PASSWORD", "NEXUS_PASSWORD")
+            }
+        }
+    }
+}
+
+String imageVersion = getVersion().toString()
+jib {
+    allowInsecureRegistries = true
+    from {
+        image = "openjdk:8-jre-alpine"
+        auth {
+            username = ENV_MAP.getOrDefault("DOCKER_HUB_USERNAME", "DOCKER_HUB_USERNAME")
+            password = ENV_MAP.getOrDefault("DOCKER_HUB_PASSWORD", "DOCKER_HUB_PASSWORD")
+        }
+    }
+    to {
+        image = ENV_MAP.getOrDefault("DOCKER_REGISTRY_URL", "") + getName() + ":" + imageVersion
+        tags = ["latest"]
+        auth {
+            username = ENV_MAP.getOrDefault("NEXUS_USERNAME", "")
+            password = ENV_MAP.getOrDefault("NEXUS_PASSWORD", "")
+        }
+    }
+    container {
+        mainClass = "dev.kirin.toy.lottoweb.LottoWebApplication"
+        ports = ["8080"]
+        creationTime = "USE_CURRENT_TIMESTAMP"
+        environment = [
+            SERVER_PORT: "8080",
+            CONTEXT_PATH: "/lotto",
+            DATABASE_URL: "",
+            DATABASE_USERNAME: "",
+            DATABASE_PASSWORD: "",
+            DATABASE_PLATFORM: "",
+            DATASOURCE_MAX_POOL_SIZE: "10",
+            LOGGING_ROOT_LEVEL: "warn",
+            LOGGING_APP_LEVEL: "info",
+            ENABLE_API_DOCS: false,
+        ]
+    }
+}
