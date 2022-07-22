@@ -68,3 +68,6 @@ springdoc:
       paths-to-match: /api/v1/history/**
   show-actuator: true
   writer-with-default-pretty-printer: true
+
+app:
+  key-file: ${ENCRYPT_KEY_FILE:classpath:default.key}
