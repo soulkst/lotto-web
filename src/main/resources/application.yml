@@ -1,7 +1,7 @@
 server:
   port: ${SERVER_PORT:8080}
   servlet:
-    context-path: /${CONTEXT_PATH:${spring.application.name}}
+    context-path: ${CONTEXT_PATH:/${spring.application.name}}
 
 spring:
   # application
@@ -48,12 +48,12 @@ management:
 springdoc:
   swagger-ui:
     path: /docs/api/ui
-    enabled: ${ENABLE_API_DOCS:true}
+    enabled: ${ENABLE_API_DOCS:false}
   api-docs:
     path: /docs/api
     groups:
       enabled: true
-    enabled: ${ENABLE_API_DOCS:true}
+    enabled: ${ENABLE_API_DOCS:false}
   default-produces-media-type: applicatino/json
   group-configs:
     - group: default

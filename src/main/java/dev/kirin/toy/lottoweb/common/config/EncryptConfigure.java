@@ -5,10 +5,10 @@ import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -16,9 +16,9 @@ import java.nio.charset.StandardCharsets;
 public class EncryptConfigure {
 
     @Bean("jasyptStringEncryptor")
-    public StringEncryptor stringEncryptor(ResourceLoader resourceLoader, AppProperties properties) throws IOException {
-        Resource keyFile = resourceLoader.getResource(properties.getKeyFile());
-        String key = FileUtils.readFileToString(keyFile.getFile(), StandardCharsets.UTF_8);
+    public StringEncryptor stringEncryptor(AppProperties properties) throws IOException {
+        File keyFile = ResourceUtils.getFile(properties.getKeyFile());
+        String key = FileUtils.readFileToString(keyFile, StandardCharsets.UTF_8);
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         config.setPassword(key);

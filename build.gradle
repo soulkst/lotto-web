@@ -124,8 +124,8 @@ jib {
     from {
         image = "openjdk:8-jre-alpine"
         auth {
-            username = ENV_MAP.getOrDefault("DOCKER_HUB_USERNAME", "DOCKER_HUB_USERNAME")
-            password = ENV_MAP.getOrDefault("DOCKER_HUB_PASSWORD", "DOCKER_HUB_PASSWORD")
+            username = ENV_MAP.getOrDefault("DOCKER_HUB_USERNAME", "")
+            password = ENV_MAP.getOrDefault("DOCKER_HUB_PASSWORD", "")
         }
     }
     to {
@@ -143,10 +143,10 @@ jib {
         environment = [
             SERVER_PORT: "8080",
             CONTEXT_PATH: "/lotto",
-            DATABASE_URL: "",
-            DATABASE_USERNAME: "",
+            DATABASE_URL: "jdbc:h2:mem:lotto",
+            DATABASE_USERNAME: "sa",
             DATABASE_PASSWORD: "",
-            DATABASE_PLATFORM: "",
+            DATABASE_PLATFORM: "H2Dialect",
             DATASOURCE_MAX_POOL_SIZE: "10",
             LOGGING_ROOT_LEVEL: "warn",
             LOGGING_APP_LEVEL: "info",

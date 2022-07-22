@@ -4,8 +4,6 @@ import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
 
@@ -21,9 +19,8 @@ public class EncryptConfigureTest {
         AppProperties appProperties = new AppProperties();
         appProperties.setKeyFile("classpath:test.key");
 
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
         encryptor = spy(EncryptConfigure.class)
-                .stringEncryptor(resourceLoader, appProperties);
+                .stringEncryptor(appProperties);
     }
 
     @DisplayName("기본 패스워드 암/복호화 테스트")

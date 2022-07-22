@@ -14,7 +14,7 @@
 | Variable                 | Default Value         | Description                                                                                                                          |
 |--------------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | SERVER_PORT              | 8080                  | Tomcat service port                                                                                                                  |
-| CONTEXT_PATH             | lotto                 | Servlet context Path                                                                                                                 |
+| CONTEXT_PATH             | /lotto                | Servlet context Path                                                                                                                 |
 | ENABLE_API_DOCS          | false                 | Enable Swagger api Documents                                                                                                         |
 | DATABASE_URL             | jdbc:h2:~/lotto       | Database JDBC URL                                                                                                                    |
 | DATABASE_USERNAME        | sa                    | Database user name                                                                                                                   |
